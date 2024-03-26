@@ -4,6 +4,9 @@ exports.getData = async (req, res) => {
     const { city } = req.body;
 
     try {
+        if (!city) {
+            throw new Error('Veuillez entrer une ville');
+        } else {
         // Appel à l'API OpenWeatherMap pour les données météorologiques actuelles
         const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`);
         // Vérification de la réponse HTTP
@@ -16,6 +19,7 @@ exports.getData = async (req, res) => {
         
         // Envoi des données au client avec un statut HTTP 200
         res.status(200).json(data);
+    }
     } catch (err) {
         // Gestion des erreurs - affichage dans la console et envoi d'une réponse d'erreur au client
         console.error(err);
@@ -29,6 +33,9 @@ exports.getDataForcast = async (req, res) => {
     const { city } = req.body;
 
     try {
+        if (!city) {
+            res.status(400).json({ error: 'Veuillez saisir une ville', message: err.message });
+        } else {
         // Appel à l'API OpenWeatherMap pour prévisions des 5 prochains jours
         const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=ba8a85f4873c3ca57ec385ba2911a698`);
 
@@ -42,6 +49,7 @@ exports.getDataForcast = async (req, res) => {
         
         // Envoi des données au client avec un statut HTTP 200
         res.status(200).json(data);
+    }
     } catch (err) {
         // Gestion des erreurs - affichage dans la console et envoi d'une réponse d'erreur au client
         console.error(err);
